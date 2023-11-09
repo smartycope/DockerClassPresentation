@@ -54,4 +54,9 @@ with st.expander('Dockerfile'):
     - `FROM`
         - Always the very first line in a file\*, it specifies the base image from the docker website
         - `<example>`
+    - `RUN`
+        - Runs a command from inside the container. By defualt, it uses bash on Linux, or powershell
+        Windows (I think, double check this)
+        - `RUN apt-get install dependant-package`
     """
+    # * This isn't always true, see https://docs.docker.com/engine/reference/builder/#parser-directives
