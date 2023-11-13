@@ -3,7 +3,7 @@ import streamlit as st
 st.caption('Team Marquet')
 st.image('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flogos-world.net%2Fwp-content%2Fuploads%2F2021%2F02%2FDocker-Symbol.png&f=1&nofb=1&ipt=5a14afd1e119e1ac15314fcdfdbb1773fa696a5236965cb353f443f7e97f5c97&ipo=images', width=400)
 
-'# Docker'
+st.title('Docker')
 st.caption('What is it? What does it do? How does it work?')
 
 # Yes, you can just put a string here and streamlit recognizes it. It's that easy.
@@ -14,6 +14,11 @@ Which is why it's used by over 20 million developers in more than 7 million appl
 
 You can kind of think of it as a lightweight virtual machine for a specific process.
 """
+
+with st.expander('Installation'):
+    """
+    Here's how to install!
+    """
 
 with st.expander('Purpose'):
     """
@@ -60,3 +65,9 @@ with st.expander('Dockerfile'):
         - `RUN apt-get install dependant-package`
     """
     # * This isn't always true, see https://docs.docker.com/engine/reference/builder/#parser-directives
+
+with st.expander('Examples'):
+    st.code('''
+    FROM ...
+    RUN ...
+    ''', language='docker')
