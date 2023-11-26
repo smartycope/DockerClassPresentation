@@ -165,3 +165,8 @@ with st.expander('Examples'):
     CMD python /app/app.py
     # specifies what command to run within the container.
     ''', language='docker')
+
+with st.expander('class Demonstration'):
+    st.code('''
+        here
+    ''')
