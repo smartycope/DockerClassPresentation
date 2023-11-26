@@ -100,6 +100,8 @@ with st.expander('Creating the Docker Container for Class Demonstration'):
     ```
 
     4. On your browser, go to `localhost:8888`
+
+    5. To test our docker container, we can upload `dockerPythonScript.ipynb`, `pattern.parquet`, and `palaces.parquet`.
     """
 
 with st.expander('Purpose'):
