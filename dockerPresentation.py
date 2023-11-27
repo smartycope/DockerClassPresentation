@@ -49,6 +49,61 @@ with st.expander('Preparation'):
     We'll get to more details next week.
     """
 
+with st.expander('Creating the Docker Container for Class Demonstration'):
+
+    """
+
+    1. Create a docker network 
+
+    ```bash
+    docker network create n451
+    ```
+
+    2. Git clone `byuibigdata/docker_guide`
+    
+    ```bash
+    git clone https://github.com/byuibigdata/docker_guide.git
+    ```
+
+    3. Now we'll create the docker container. In order to create it we will run this terminal code below.
+    I personally had to put it all on one line. We'll also have to change the path
+    (`C:\\Users\\spence\\Desktop\\classes\\DS_460\\docker_guide\\data`) which you will need to change.
+
+    __Command Line: Mac__
+
+    ```bash
+    docker run --name spark -it \\
+    -p 8888:8888 -p 4040:4040 -p 4041:4041 \\
+    -v /Users/hathawayj/git/BYUI451/docker_guide/data:/home/jovyan/data \\
+    -v /Users/hathawayj/git/BYUI451/docker_guide/scripts:/home/jovyan/scripts \\
+    -v /Users/hathawayj/git/BYUI451/docker_guide/scratch:/home/jovyan/scratch \\
+    --network n451 \\
+    jupyter/all-spark-notebook
+    ```
+
+    __Command Line: Windows__
+
+    ```bash
+    docker run --name spark -it ^
+    -p 8888:8888 -p 4040:4040 -p 4041:4041 ^
+    -v C:\\Users\\spence\\Desktop\\classes\\DS_460\\docker_guide\\data:/home/jovyan/data ^
+    -v C:\\Users\\spence\\Desktop\\classes\\DS_460\\docker_guide\\scripts:/home/jovyan/scripts ^
+    -v C:\\Users\\spence\\Desktop\\classes\\DS_460\\docker_guide\\scratch:/home/jovyan/scratch ^
+    --network n451 ^
+    jupyter/all-spark-notebook
+    ```
+    
+    __Here is what my code looked like__
+
+    ```bash
+    docker run --name spark -it -p 8888:8888 -p 4040:4040 -p 4041:4041 -v C:\\Users\\spence\\Desktop\\classes\\DS_460\\docker_guide\\data:/home/jovyan/data -v C:\\Users\\spence\\Desktop\\classes\\DS_460\\docker_guide\\scripts:/home/jovyan/scripts -v C:\\Users\\spence\\Desktop\\classes\\DS_460\\docker_guide\\scratch:/home/jovyan/scratch --network n451 jupyter/all-spark-notebook
+    ```
+
+    4. On your browser, go to `localhost:8888`
+
+    5. To test our docker container, we can upload `dockerPythonScript.ipynb`, `pattern.parquet`, and `palaces.parquet`.
+    """
+
 with st.expander('Purpose'):
     """
     The use of docker is that it allows you to set up an enviorment (*`container`*) you can run software
