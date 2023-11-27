@@ -59,7 +59,7 @@ with st.expander('Creating the Docker Container for Class Demonstration'):
     docker network create n451
     ```
 
-    2. Git clone 
+    2. Git clone `byuibigdata/docker_guide`
     
     ```bash
     git clone https://github.com/byuibigdata/docker_guide.git
