@@ -1,7 +1,15 @@
 import streamlit as st
 
+dockerImage = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flogos-world.net%2Fwp-content%2Fuploads%2F2021%2F02%2FDocker-Symbol.png&f=1&nofb=1&ipt=5a14afd1e119e1ac15314fcdfdbb1773fa696a5236965cb353f443f7e97f5c97&ipo=images"
+
+st.set_page_config(
+    page_title='Docker Presentation',
+    layout='wide',
+    page_icon=dockerImage
+)
+
 st.caption('Team Marquet')
-st.image('https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flogos-world.net%2Fwp-content%2Fuploads%2F2021%2F02%2FDocker-Symbol.png&f=1&nofb=1&ipt=5a14afd1e119e1ac15314fcdfdbb1773fa696a5236965cb353f443f7e97f5c97&ipo=images', width=400)
+st.image(dockerImage, width=400)
 
 st.title('Docker')
 st.caption('What is it? What does it do? How does it work?')
@@ -43,65 +51,114 @@ with st.expander('Preparation'):
     ### CLI
     If you're using the command line (if you're using Windows, make sure docker is added to PATH),
     just run
-    """
-    st.code('docker pull jupyter/all-spark-notebook')
-    """
+    ```bash
+    docker pull jupyter/all-spark-notebook
+    ```
     We'll get to more details next week.
     """
 
-with st.expander('Creating the Docker Container for Class Demonstration'):
-
+with st.expander('Running the all-spark-notebook container'):
     """
+    0. Pre-steps:
+    If you're using Windows, don't forget to add the executable to PATH.
 
-    1. Create a docker network 
-
+    If you're on linux, don't forget to start the Docker deamon using:
+    ```bash
+    sudo systemctl start docker
+    ```
+    1. Create a docker network
+    We're showing you how to do this for tutorial purpouses only. A docker network
+    is typically for connecting multiple containers together, or for connecting containers
+    to non-docker workloads.
     ```bash
     docker network create n451
     ```
-
     2. Git clone `byuibigdata/docker_guide`
-    
+
     ```bash
     git clone https://github.com/byuibigdata/docker_guide.git
+    cd docker_guide
     ```
 
-    3. Now we'll create the docker container. In order to create it we will run this terminal code below.
-    I personally had to put it all on one line. We'll also have to change the path
-    (`C:\\Users\\spence\\Desktop\\classes\\DS_460\\docker_guide\\data`) which you will need to change.
+    3. Now we'll create the docker container. In order to create it we will run the following
+    terminal code:
 
-    __Command Line: Mac__
-
+    Mac/Linux:
     ```bash
-    docker run --name spark -it \\
+    docker run -it --name spark \\
     -p 8888:8888 -p 4040:4040 -p 4041:4041 \\
-    -v /Users/hathawayj/git/BYUI451/docker_guide/data:/home/jovyan/data \\
-    -v /Users/hathawayj/git/BYUI451/docker_guide/scripts:/home/jovyan/scripts \\
-    -v /Users/hathawayj/git/BYUI451/docker_guide/scratch:/home/jovyan/scratch \\
+    -v ./data:/home/jovyan/data \\
+    -v ./scripts:/home/jovyan/scripts \\
+    -v ./scratch:/home/jovyan/scratch \\
     --network n451 \\
     jupyter/all-spark-notebook
     ```
-
-    __Command Line: Windows__
-
+    Windows:
     ```bash
-    docker run --name spark -it ^
+    docker run -it --name spark^
     -p 8888:8888 -p 4040:4040 -p 4041:4041 ^
-    -v C:\\Users\\spence\\Desktop\\classes\\DS_460\\docker_guide\\data:/home/jovyan/data ^
-    -v C:\\Users\\spence\\Desktop\\classes\\DS_460\\docker_guide\\scripts:/home/jovyan/scripts ^
-    -v C:\\Users\\spence\\Desktop\\classes\\DS_460\\docker_guide\\scratch:/home/jovyan/scratch ^
+    -v .\\data:/home/jovyan/data ^
+    -v .\\scripts:/home/jovyan/scripts ^
+    -v .\\scratch:/home/jovyan/scratch ^
     --network n451 ^
     jupyter/all-spark-notebook
     ```
-    
-    __Here is what my code looked like__
+    ##### **Now lets go through step by step and see what that command is doing:**
 
+    This tells docker to run the container (specified later), name it "spark", and open
+    an interactive terminal inside the container.
     ```bash
-    docker run --name spark -it -p 8888:8888 -p 4040:4040 -p 4041:4041 -v C:\\Users\\spence\\Desktop\\classes\\DS_460\\docker_guide\\data:/home/jovyan/data -v C:\\Users\\spence\\Desktop\\classes\\DS_460\\docker_guide\\scripts:/home/jovyan/scripts -v C:\\Users\\spence\\Desktop\\classes\\DS_460\\docker_guide\\scratch:/home/jovyan/scratch --network n451 jupyter/all-spark-notebook
+    docker run -it --name spark \\
+    ```
+    This tells docker to bind the specified ports inside the container to the local machine.
+    So if you do something inside the container on these ports, it will effect your local machine
+    as well.
+    ```bash
+    -p 8888:8888 -p 4040:4040 -p 4041:4041 \\
+    ```
+    Each of these tells docker "take this file, and make it available inside the
+    container at the specified path". This works just like the VOLUME command inside
+    a Dockerfile, except this way we don't want to have to edit the Dockerfile directly.
+    ```bash
+    -v ./data:/home/jovyan/data \\
+    -v ./scripts:/home/jovyan/scripts \\
+    -v ./scratch:/home/jovyan/scratch \\
+    ```
+    This connects the image to the docker network we just created in step 1
+    ```bash
+    --network n451 \\
+    ```
+    This is the name of the notebook we want to run
+    ```bash
+    jupyter/all-spark-notebook
     ```
 
-    4. On your browser, go to `localhost:8888`
+    After you run that command, you should see a bunch of output of Docker setting the container up.
 
-    5. To test our docker container, we can upload `dockerPythonScript.ipynb`, `pattern.parquet`, and `palaces.parquet`.
+    4. Now we have it running! Everything is all set up for us in a Jupyter server running on port 8888.
+    We can now test it in 2 ways:
+
+    In your browser, go to the second URL given in the output. It should look something like `http://127.0.0.1:8888/lab?token=...`
+    You can then upload some PySpark code or start a new notebook by clicking on `Python 3 (ipykernel)`.
+
+    Or, if you prefer VSCode (or it's open source cousin VSCodium) and you have the Jupyter Notebook extension,
+    you can open a new Jupyter notebook, click on the current kernel (or "select kernel") in the top right,
+    click "Select Another Kernel...", click "Existing Jupyter Server...", and copy and paste the
+    `http://127.0.0.1:8888/lab?token=...` link mentioned above. This connects that notebook to the PySpark
+    Jupyter server running in our Docker container.
+
+    Whichever method you choose, try pasting this code in a notebook and running it.
+    ```python
+    from pyspark.sql import SparkSession
+
+    spark = (SparkSession
+        .builder
+        .appName("PySpark Example")
+        .config("spark.some.config.option", "some-value")
+        .getOrCreate()
+    )
+    spark.version
+    ```
     """
 
 with st.expander('Purpose'):
@@ -115,12 +172,9 @@ with st.expander('Purpose'):
 with st.expander('Containers and Images'):
     st.image('ContainerImage.png')
     """
-    In docker, you have several parts.
     #### Images
-    Images are like a variable definition. Think of it like a C++ header file, or ...something else
-    not relating to C++
+    Images are like a variable definition. It describes how a container is made.
 
-    You define images by
     #### Containers
     Containers are instantiations of images.
     """
@@ -209,7 +263,7 @@ with st.expander('Dockerfile'):
         - Specifies which shell executable is used for following commands
     """
 
-with st.expander('Examples'):
+with st.expander('Example'):
     st.code('''
     FROM ubuntu:22.04
     # creates a layer from the ubuntu:22.04 Docker image.
